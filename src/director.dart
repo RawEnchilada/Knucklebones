@@ -5,7 +5,7 @@ import 'renderer.dart';
 
 class Director{
     late final Renderer _renderer;
-    late final State state;
+    late State state;
     Player? player;
     Actor? ai;
 
@@ -17,11 +17,12 @@ class Director{
         _renderer.renderMenu();
     }
 
-    void startGame(String difficulty){
+    void startGame(String difficulty)async {
+        state = State();
         player = Player(this);
         switch(difficulty){
             case "easy":
-                ai = EasyAI(this);
+                ai = RandomAI(this);
                 break;
             case "medium":
                 ai = MediumAI(this);
@@ -30,15 +31,24 @@ class Director{
                 ai = HardAI(this);
                 break;
         }
+        state.currentPlayer = Random().nextInt(2);
         _renderer.renderGame(state);
-        _nextTurn();
+        state.nextValue = _rollNextValue();
+        await _renderer.rollDice(state.currentPlayer,state.nextValue);
+        if(state.currentPlayer == 0){
+            player?.startTurn(state);
+        }
+        else{
+            ai?.startTurn(state);
+        }
     }
 
     void playerPlaced(int x,int y){
-        player?.place(state,x,y);
+        player?.place(x,y);
     }
 
     void endTurn(){
+        _renderer.renderGame(state);
         _renderer.emptyRollSlots();
         if(state.board1.every((row) => row.every((value) => value != 0)) 
         || state.board2.every((row) => row.every((value) => value != 0))){
@@ -78,11 +88,7 @@ class Director{
 
     int _calculateScore(List<List<int>> values){
         var score = 0;
-        for (var row in values) {
-            for (var field in row) {
-                score += field;
-            }
-        }
+        //TODO multiply columns when containing multiple of same number, then sum all values;
         return score;
     }
 

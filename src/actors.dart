@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'director.dart';
 import 'state.dart';
 
@@ -6,16 +7,17 @@ abstract class Actor{
     Actor(this.director);
 
     void startTurn(State state);
-    void place(State state,int x, int y){
-        List<List<int>> current = state.board1;
-        List<List<int>> opposite = state.board2;
-        if(state.currentPlayer == 1){
-            current = state.board2;
-            opposite = state.board1;
+    void place(int x, int y){
+        List<List<int>> current = director.state.board1;
+        List<List<int>> opposite = director.state.board2;
+        if(director.state.currentPlayer == 1){
+            current = director.state.board2;
+            opposite = director.state.board1;
         }
-        current[x][y] = state.nextValue;
+        current[x][y] = director.state.nextValue;
+        print("Placed ${director.state.nextValue} at $x,$y");
         for (var row in opposite) {
-            if(row[y] == state.nextValue){
+            if(row[y] == director.state.nextValue){
                 row[y] = 0;
             }
         }
@@ -37,11 +39,18 @@ class Player extends Actor{
 }
 
 
-class EasyAI extends Actor{
-  EasyAI(super.director);
+class RandomAI extends Actor{
+  RandomAI(super.director);
 
     @override
     void startTurn(State state) {
+        int x = Random().nextInt(3);
+        int y = Random().nextInt(3);
+        while(state.board2[x][y] != 0){
+            x = Random().nextInt(3);
+            y = Random().nextInt(3);
+        }
+        place(x,y);
     }
 }
 

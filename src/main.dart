@@ -8,5 +8,5 @@ void main() {
     Renderer renderer = Renderer(controller);  
     Director director = Director(renderer);
     controller.bindDirector(director);
-    director.showMenu();
+    controller.showMenu();
 }

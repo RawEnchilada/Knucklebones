@@ -7,3 +7,4 @@ dist/
 dist/*
 .vscode/
 .vscode/*
+test.dart

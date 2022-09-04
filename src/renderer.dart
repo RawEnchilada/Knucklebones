@@ -50,23 +50,31 @@ class Renderer{
         lower.append(_createBoard(0, state.board1));
         split.append(upper);
         split.append(lower);
+        d.append(Element.div()..id="turnLabel"..text = state.currentPlayer==0?"Your turn":"AI's turn");
         d.append(split);
         _render(d);
     }
     
 
     Element _createBoard(int player,List<List<int>> values){
+        print(values);
         var board = Element.div();
         var sums = List.generate(3, (index) => 0,growable: false);
         board.id = "board$player";
         board.className = "board";
+        List<Element> elements = [];
         for(var x = 0;x < 3;x++){
             for(var y = 0;y < 3;y++){
                 var field = Element.div();
                 field.className = "field";
                 field.onClick.listen((e) => _controller.fieldClicked(x,y));
                 field.append(_createDice(values[x][y]));
-                board.append(field);
+                if(player == 0){
+                    elements.add(field);
+                }
+                else{
+                    board.append(field);
+                }
                 sums[y] += values[x][y];
             }
         }
@@ -75,13 +83,25 @@ class Renderer{
             field.id = "indicator$i";
             field.text = sums[i].toString();
             board.append(field);
+            //TODO multiply if the same values are present in a column
+            
+        }
+        if(elements.isNotEmpty){
+            for(var e in elements){
+                board.append(e);
+            }
         }
         
         return board;
     }
 
     Element _createDice(int value){
-        return Element.div();
+        var dice = Element.div();
+        dice.classes = ["dice","dice$value"];
+        for (var i = 0; i < value; i++) {
+            dice.append(Element.div()..className="dot");
+        }
+        return dice;
     }
 
     Future<void> rollDice(int player,int value) async {
@@ -96,7 +116,9 @@ class Renderer{
 
     void emptyRollSlots(){
         querySelector("#roll0")?.children.clear();
+        querySelector("#roll0")?.append(_createDice(0));
         querySelector("#roll1")?.children.clear();
+        querySelector("#roll1")?.append(_createDice(0));
     }
 
     void errorReport(String text){
@@ -107,13 +129,19 @@ class Renderer{
     }
 
     void renderWin(){
-
+        querySelector("#turnLabel")?.text = "You win!";
+        Future.delayed(Duration(seconds:2));
+        _controller.showMenu();
     }
     void renderLose(){
-
+        querySelector("#turnLabel")?.text = "You lose!";
+        Future.delayed(Duration(seconds:2));
+        _controller.showMenu();
     }
     void renderDraw(){
-
+        querySelector("#turnLabel")?.text = "Draw!";
+        Future.delayed(Duration(seconds:2));
+        _controller.showMenu();
     }
 
 }
