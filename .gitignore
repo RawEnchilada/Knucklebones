@@ -7,6 +7,8 @@ dist/
 dist/*
 docs/
 docs/*
+_site/
+_site/*
 .vscode/
 .vscode/*
 test.dart

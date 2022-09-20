@@ -25,7 +25,10 @@ jobs:
       uses: actions/configure-pages@v2
 
     - name: Build to docs
-      run: make
+      run: make artifact
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v1
 
   deploy:
     environment:
