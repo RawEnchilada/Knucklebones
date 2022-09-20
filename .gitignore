@@ -5,6 +5,8 @@
 # Conventional directory for build output.
 dist/
 dist/*
+docs/
+docs/*
 .vscode/
 .vscode/*
 test.dart

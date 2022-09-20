@@ -1,0 +1,41 @@
+name: Publish branch 'main' to github pages.
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: github-pages
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v2
+
+    - name: Install dependencies
+      run: apt-get install dart
+
+    - name: Build to docs
+      run: make
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
