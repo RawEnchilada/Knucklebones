@@ -31,8 +31,8 @@ class Renderer{
         menu.append(Element.div()..text = "Choose Difficulty");
         var dropdown = SelectElement();
         dropdown.append(OptionElement(data: "Easy", value: "easy"));
-        dropdown.append(OptionElement(data: "Medium", value: "medium"));
-        dropdown.append(OptionElement(data: "Hard", value: "hard"));
+        //dropdown.append(OptionElement(data: "Medium", value: "medium"));
+        //dropdown.append(OptionElement(data: "Hard", value: "hard"));
         menu.append(dropdown);
         menu.append(ButtonElement()..text = "Start Game"..onClick.listen((e) => _controller.startGame(dropdown.value!)));
         d.append(menu);
@@ -110,6 +110,7 @@ class Renderer{
 
         //TODO animate
         var dice = _createDice(value);
+        querySelector("#roll$player")?.children.clear();
         slot!.append(dice);
         await Future.delayed(Duration(seconds: 1));
     }
