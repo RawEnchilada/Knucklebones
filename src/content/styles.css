@@ -1,16 +1,85 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: 'Roboto', sans-serif;
+html {
+    width: 100vw;  
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
 }
 #display{
-    height: 100%;
+    display: grid;
+    grid-template-rows: repeat(9, 1fr);
+    grid-template-columns: repeat(7, 1fr);
+    margin: 5rem auto 0 auto;
+    max-width:fit-content;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
+#turnLabel{
+    margin-bottom: 1rem;
+    font-size: large;
+    text-align: center;
+    grid-column: 3/6;
+    grid-row: 1;
+}
+#board1{
+    grid-column: 3/6;
+    grid-row: 2/5;
+}
+#roll1{
+    grid-column: 7;
+    grid-row: 4;
+    max-width: fit-content;
+    justify-self: left;
+}
+#score1{
+    grid-column: 7;
+    grid-row: 5;
+}
+#indicator10{
+    grid-column: 3;
+    grid-row: 5;
+}
+#indicator11{
+    grid-column: 4;
+    grid-row: 5;
+}
+#indicator12{
+    grid-column: 5;
+    grid-row: 5;
+}
+#board0{
+    grid-column: 3/6;
+    grid-row: 7/10;
+}
+#roll0{
+    grid-column: 1;  
+    grid-row: 7; 
+    max-width: fit-content;
+    justify-self: right;
+}
+#score0{
+    grid-column: 1;
+    grid-row: 6;
+}
+#indicator00{
+    grid-column: 3;
+    grid-row: 6;
+}
+#indicator01{
+    grid-column: 4;
+    grid-row: 6;
+}
+#indicator02{
+    grid-column: 5;
+    grid-row: 6;
+}
+
 .menu{
+    grid-column: 1/8;
+    grid-row: 1/10;
     display: flex;
     margin: auto;
     margin-top: 10rem;
@@ -33,42 +102,16 @@ html, body {
 .board{
     display:grid;
     grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     grid-gap: 1px;
+    width: 100%;
 }
-#board0{
-    grid-template-rows: 0.25fr repeat(3, 1fr);
-}
-#board1{
-    grid-template-rows: repeat(3, 1fr) 0.25fr;
 
-}
 .board *{
     text-align: center;
 }
 
-#turnLabel{
-    margin-top:5rem;
-    margin-bottom: 1rem;
-    font-size: large;
-    text-align: center;
-}
-.horizontalSplit{
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-    max-width: 500px;
-    position: relative;
-}
-.horizontalSplit>div{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap:2rem;
-}
+
 
 .dice{
     min-width: 22px;
@@ -115,12 +158,4 @@ html, body {
     border-radius: 100%;
     border-style: solid;
     box-sizing: content-box;
-}
-#roll1{
-    position: absolute;
-    right:15%;
-}
-#roll0{
-    position: absolute;
-    left:15%;
 }

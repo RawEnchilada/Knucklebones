@@ -18,7 +18,7 @@ class Renderer{
     }
 
     void _render(Element newDisplay){
-        newDisplay.id = "#display";
+        newDisplay.id = "display";
         _display.replaceWith(newDisplay);
         _display = newDisplay;
     }
@@ -31,7 +31,7 @@ class Renderer{
         menu.append(Element.div()..text = "Choose Difficulty");
         var dropdown = SelectElement();
         dropdown.append(OptionElement(data: "Easy", value: "easy"));
-        //dropdown.append(OptionElement(data: "Medium", value: "medium"));
+        dropdown.append(OptionElement(data: "Medium", value: "medium"));
         //dropdown.append(OptionElement(data: "Hard", value: "hard"));
         menu.append(dropdown);
         menu.append(ButtonElement()..text = "Start Game"..onClick.listen((e) => _controller.startGame(dropdown.value!)));
@@ -41,25 +41,35 @@ class Renderer{
 
     void renderGame(State state){
         var d = Element.div();
-        var split = Element.div()..className="horizontalSplit";
-        var upper = Element.div();
-        upper.append(_createBoard(1,state.board2));
-        upper.append(Element.div()..className="field"..id="roll1");
-        var lower = Element.div();
-        lower.append(Element.div()..className="field"..id="roll0");
-        lower.append(_createBoard(0, state.board1));
-        split.append(upper);
-        split.append(lower);
-        d.append(Element.div()..id="turnLabel"..text = state.currentPlayer==0?"Your turn":"AI's turn");
-        d.append(split);
+        d.append(_createBoard(1,state));
+        for(var i = 0;i < 3;i++){
+            var field = Element.div();
+            field.id = "indicator0$i";
+            field.text = state.getColumnScore(state.board1,i).toString();
+            d.append(field);
+        }
+        d.append(Element.div()..className="field"..id="roll0");
+        d.append(Element.div()..className="score"..id="score0"..text=state.getTotalScore(state.board1).toString());
+        d.append(Element.div()..className="field"..id="roll1");
+        d.append(Element.div()..className="score"..id="score1"..text=state.getTotalScore(state.board2).toString());
+        d.append(_createBoard(0, state));
+        for(var i = 0;i < 3;i++){
+            var field = Element.div();
+            field.id = "indicator1$i";
+            field.text = state.getColumnScore(state.board2,i).toString();
+            d.append(field);
+        }
+        d.append(Element.div()..id="turnLabel"..text = state.currentPlayer==1?"Your turn":"AI's turn");
+
+        //querySelector("#roll0")?.style.content = state.getTotalScore(state.board1).toString();
+        //querySelector("#roll1")?.style.content = state.getTotalScore(state.board2).toString();
         _render(d);
     }
     
 
-    Element _createBoard(int player,List<List<int>> values){
-        print(values);
+    Element _createBoard(int player,State state){
+        var values = player == 0?state.board1:state.board2;
         var board = Element.div();
-        var sums = List.generate(3, (index) => 0,growable: false);
         board.id = "board$player";
         board.className = "board";
         List<Element> elements = [];
@@ -67,7 +77,9 @@ class Renderer{
             for(var y = 0;y < 3;y++){
                 var field = Element.div();
                 field.className = "field";
-                field.onClick.listen((e) => _controller.fieldClicked(x,y));
+                if(player == 0){
+                    field.onClick.listen((e) => _controller.fieldClicked(x,y));
+                }
                 field.append(_createDice(values[x][y]));
                 if(player == 0){
                     elements.add(field);
@@ -75,16 +87,7 @@ class Renderer{
                 else{
                     board.append(field);
                 }
-                sums[y] += values[x][y];
             }
-        }
-        for(var i = 0;i < 3;i++){
-            var field = Element.div();
-            field.id = "indicator$i";
-            field.text = sums[i].toString();
-            board.append(field);
-            //TODO multiply if the same values are present in a column
-            
         }
         if(elements.isNotEmpty){
             for(var e in elements){
@@ -123,25 +126,22 @@ class Renderer{
     }
 
     void errorReport(String text){
-            _display = Element.tag("div");
-            _display.id = "display";
-            _display.text = text;
-            document.body?.append(_display);
+        _display = Element.tag("div");
+        _display.id = "display";
+        _display.text = text;
+        document.body?.append(_display);
     }
 
-    void renderWin(){
-        querySelector("#turnLabel")?.text = "You win!";
-        Future.delayed(Duration(seconds:2));
-        _controller.showMenu();
+    Future<void> renderEnd(String label) async {
+        _controller.active = false;
+        querySelector("#turnLabel")?.text = label;
+        await Future.delayed(Duration(seconds: 1));
+        document.addEventListener("click", _backToMenu);
     }
-    void renderLose(){
-        querySelector("#turnLabel")?.text = "You lose!";
-        Future.delayed(Duration(seconds:2));
-        _controller.showMenu();
-    }
-    void renderDraw(){
-        querySelector("#turnLabel")?.text = "Draw!";
-        Future.delayed(Duration(seconds:2));
+
+    void _backToMenu(Event e) {
+        document.removeEventListener("click", _backToMenu);
+        _controller.active = true;
         _controller.showMenu();
     }
 

@@ -1,5 +1,7 @@
+import 'actors.dart';
 import 'controller.dart';
 import 'director.dart';
+import 'learningDirector.dart';
 import 'renderer.dart';
 
 
@@ -9,4 +11,9 @@ void main() {
     Director director = Director(renderer);
     controller.bindDirector(director);
     controller.showMenu();
+}
+
+
+void trainai(){
+    var director = LearningDirector();
 }

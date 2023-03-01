@@ -2,6 +2,8 @@ import 'director.dart';
 
 class Controller{
 
+    bool active = true;
+
     Function? _onStartGame;
     Function? _onFieldClick;
     Function? _onShowMenu;
@@ -10,6 +12,7 @@ class Controller{
         _onStartGame = director.startGame;
         _onFieldClick = director.playerPlaced;
         _onShowMenu = director.showMenu;
+        active = true;
     }
 
     void startGame(String difficulty){
@@ -17,7 +20,7 @@ class Controller{
     }
 
     void fieldClicked(int x,int y){
-        _onFieldClick?.call(x,y);
+        if(active)_onFieldClick?.call(x,y);
     }
 
     void showMenu(){

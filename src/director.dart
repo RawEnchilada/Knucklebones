@@ -3,10 +3,11 @@ import 'actors.dart';
 import 'state.dart';
 import 'renderer.dart';
 
+
 class Director{
     late final Renderer _renderer;
     late State state;
-    Player? player;
+    Actor? player;
     Actor? ai;
 
     Director(this._renderer){
@@ -17,7 +18,7 @@ class Director{
         _renderer.renderMenu();
     }
 
-    void startGame(String difficulty)async {
+    Future<void> startGame(String difficulty)async {
         state = State();
         player = Player(this);
         switch(difficulty){
@@ -25,22 +26,15 @@ class Director{
                 ai = RandomAI(this);
                 break;
             case "medium":
-                ai = MediumAI(this);
+                ai = MinMaxAI(this);
                 break;
             case "hard":
-                ai = HardAI(this);
+                ai = TrainedAI(this);
                 break;
         }
         state.currentPlayer = Random().nextInt(2);
         _renderer.renderGame(state);
-        state.nextValue = _rollNextValue();
-        await _renderer.rollDice(state.currentPlayer,state.nextValue);
-        if(state.currentPlayer == 0){
-            player?.startTurn(state);
-        }
-        else{
-            ai?.startTurn(state);
-        }
+        await _nextTurn();
     }
 
     void playerPlaced(int x,int y){
@@ -60,7 +54,7 @@ class Director{
     }
 
 
-    void _nextTurn() async {
+    Future<void> _nextTurn() async {
         state.currentPlayer = (state.currentPlayer + 1) % 2;
         state.nextValue = _rollNextValue();
         await _renderer.rollDice(state.currentPlayer,state.nextValue);
@@ -73,24 +67,19 @@ class Director{
     }
 
     void _endGame(){
-        var score1 = _calculateScore(state.board1);
-        var score2 = _calculateScore(state.board2);
+        var score1 = state.getTotalScore(state.board1);
+        var score2 = state.getTotalScore(state.board2);
         if(score1 > score2){
-            _renderer.renderWin();
+            _renderer.renderEnd("You win!\nClick to continue.");
         }
         else if(score2 > score1){
-            _renderer.renderLose();
+            _renderer.renderEnd("You lose!\nClick to continue.");
         }
         else{
-            _renderer.renderDraw();
+            _renderer.renderEnd("Draw!\nClick to continue.");
         }
     }
 
-    int _calculateScore(List<List<int>> values){
-        var score = 0;
-        //TODO multiply columns when containing multiple of same number, then sum all values;
-        return score;
-    }
 
     int _rollNextValue(){
         var v = Random().nextInt(6) + 1;

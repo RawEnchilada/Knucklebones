@@ -4,10 +4,7 @@ A version of the luck and strategy based dice game from [Cult of The Lamb](https
 Available at: https://rawenchilada.github.io/Knucklebones/
 
 # Roadmap
- - Medium AI
  - Hard AI
- - Multiplying same dices in a column
- - End game screen
 
 # How to Play
 - Take turns with the ai to place dices on a 3x3 board. 
