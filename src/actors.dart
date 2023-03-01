@@ -2,8 +2,8 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'director.dart';
 import 'state.dart';
-import 'package:eneural_net/eneural_net.dart';
-import 'package:eneural_net/eneural_net_extensions.dart';
+//import 'package:eneural_net/eneural_net.dart';
+//import 'package:eneural_net/eneural_net_extensions.dart';
 
 abstract class Actor{
     Director director;
@@ -88,17 +88,17 @@ class MinMaxAI extends Actor{
 
 class LearningAI extends Actor{
 
-    late ANN _ann;
+    //late ANN _ann;
 
     LearningAI(super.director){
-        var activationFunction = ActivationFunctionSigmoid();
+        /*var activationFunction = ActivationFunctionSigmoid();
         _ann = ANN<double, Float32x4, SignalFloat32x4, Scale<double>>(
             ScaleDouble.ZERO_TO_ONE,
             LayerFloat32x4(19, true, ActivationFunctionLinear()), // 2x 3x3 boards + 1 next value
             [HiddenLayerConfig(25, true, activationFunction),
              HiddenLayerConfig(25, true, activationFunction)], // hidden layers
             LayerFloat32x4(9, false, activationFunction) // 9 possible slots
-        );
+        );*/
     }
 
     @override
@@ -110,7 +110,7 @@ class LearningAI extends Actor{
 
 class TrainedAI extends Actor{
 
-    late ANN _ann;
+    //late ANN _ann;
 
     TrainedAI(super.director){
         //_ann load trained model
