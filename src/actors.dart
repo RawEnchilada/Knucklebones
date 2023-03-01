@@ -61,9 +61,20 @@ class MinMaxAI extends Actor{
     void startTurn(State state) {
         var stateClone = state.copy();
 
-        int maxScore = 0;
+
+        int maxScore = -1000;
         int mx = 0;
         int my = 0;
+        for (var x = 0; x < 3; x++) {
+            for (var y = 0; y < 3; y++) {
+                if(stateClone.board2[x][y] == 0){
+                    mx = x;
+                    my = y;
+                    break;
+                }
+            }
+        }
+
         for (var x = 0; x < 3; x++) {
             for (var y = 0; y < 3; y++) {
                 if(stateClone.board2[x][y] == 0){

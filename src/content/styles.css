@@ -23,6 +23,7 @@ html {
     text-align: center;
     grid-column: 3/6;
     grid-row: 1;
+    white-space: break-spaces;
 }
 #board1{
     grid-column: 3/6;

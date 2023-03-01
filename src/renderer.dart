@@ -143,6 +143,7 @@ class Renderer{
         document.removeEventListener("click", _backToMenu);
         _controller.active = true;
         _controller.showMenu();
+        window.location.reload();
     }
 
 }
